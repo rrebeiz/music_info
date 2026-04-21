@@ -1,0 +1,28 @@
+# Build artifacts (crates.io)
+/target/
+
+# Editor/IDE generated files
+.vscode/
+.idea/
+build/
+
+# Temporary files
+*.swp
+*~
+
+# Cargo lock file (pin dependencies in CI)
+Cargo.lock
+
+# Logs
+logs/
+log/
+
+# Environment variables and sensitive information
+.env
+*.env*
+
+# macOS-specific metadata
+.DS_Store
+
+# Windows-specific metadata
+Thumbs.db
