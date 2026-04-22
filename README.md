@@ -1,6 +1,10 @@
+<div align="center">
 # Now Playing Notifier
 
 A lightweight Rust CLI tool that listens to the currently active media player via MPRIS (D-Bus) and sends desktop notifications whenever the track changes.
+
+<img src="resources/screenshot.png" alt="Screenshot of the Now Playing Notifier">
+</div>
 
 ---
 
@@ -17,7 +21,7 @@ It monitors the active media player through the MPRIS D-Bus interface and displa
 * Detects the currently active media player via MPRIS
 * Retrieves track metadata (title, artist)
 * Sends desktop notifications on track change
-* Super lightweight CLI-based design (consumes only half a megabyte)
+* Super lightweight CLI-based design (consumes less than half a megabyte)
 * Works with common Linux media players (Spotify, VLC, browser media sessions, etc.)
 
 ---
