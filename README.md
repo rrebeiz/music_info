@@ -21,6 +21,10 @@ It monitors the active media player through the MPRIS D-Bus interface and displa
 * Works with common Linux media players (Spotify, VLC, browser media sessions, etc.)
 
 ---
+## Requirements
+* Pop!_OS with Cosmic (Or another distro running COSMIC)
+* This should generally work on any Linux distribution, however it was made with Cosmic in mind as it doesn't currently have any media notifications.
+---
 
 ## Dependencies
 
