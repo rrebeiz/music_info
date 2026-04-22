@@ -1,4 +1,5 @@
 <div align="center">
+
 # Now Playing Notifier
 
 A lightweight Rust CLI tool that listens to the currently active media player via MPRIS (D-Bus) and sends desktop notifications whenever the track changes.
