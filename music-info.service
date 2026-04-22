@@ -1,0 +1,11 @@
+[Unit]
+Description=Music Info Notifier
+After=network.target
+
+[Service]
+ExecStart=/home/<USER>/.cargo/bin/music_info
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

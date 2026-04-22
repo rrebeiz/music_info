@@ -53,6 +53,29 @@ cargo build --release
 ./target/release/<binary_name>
 ```
 
+### Installing
+
+### building from source
+
+```bash
+cargo install --path .
+
+mkdir -p ~./config/systemd/user
+cp music_info.service ~/.config/systemd/user/
+systemctl --user daemon-reexec
+systemctl --user daemon-reload
+systemctl --user enable music_info
+systemctl --user start music_info
+systemctl --user status music_info
+```
+
+### if downloading the release version from github
+```bash
+cp music_info  /usr/local/bin
+chmod +x /usr/local/bin/music_info
+```
+repeat the steps for creating a service entry, but change the path to the binary.
+
 ---
 
 ## How it works
