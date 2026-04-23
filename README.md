@@ -44,6 +44,20 @@ System-level dependencies (Linux):
 
 ## Usage
 
+### Installing
+
+### using the make file
+```bash
+make install          # native
+make install-flatpak  # flatpak version
+```
+
+### uninstalling
+```bash
+make uninstall         #native
+make uninstall-flatpak # flatpak version
+```
+
 ### Run in development mode
 
 ```bash
@@ -62,8 +76,6 @@ cargo build --release
 ./target/release/<binary_name>
 ```
 
-### Installing
-
 ### building from source
 
 ```bash
@@ -71,7 +83,6 @@ cargo install --path .
 
 mkdir -p ~./config/systemd/user
 cp music_info.service ~/.config/systemd/user/
-systemctl --user daemon-reexec
 systemctl --user daemon-reload
 systemctl --user enable music_info
 systemctl --user start music_info

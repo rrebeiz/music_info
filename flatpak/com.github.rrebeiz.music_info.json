@@ -1,0 +1,39 @@
+{
+    "app-id": "com.github.rrebeiz.music_info",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "24.08",
+    "sdk": "org.freedesktop.Sdk",
+    "sdk-extensions": [
+        "org.freedesktop.Sdk.Extension.rust-stable"
+    ],
+    "command": "music_info",
+    "build-options": {
+        "append-path": "/usr/lib/sdk/rust-stable/bin",
+        "env": {
+            "CARGO_HOME": "/run/build/music_info/cargo"
+        },
+        "build-args": [
+            "--share=network"
+        ]
+    },
+    "modules": [
+        {
+            "name": "music_info",
+            "buildsystem": "simple",
+            "build-commands": [
+                "cargo build --release",
+                "install -Dm755 target/release/music_info /app/bin/music_info"
+            ],
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "../"
+                }
+            ]
+        }
+    ],
+    "finish-args": [
+        "--socket=session-bus",
+        "--talk-name=org.mpris.MediaPlayer2.*"
+    ]
+}

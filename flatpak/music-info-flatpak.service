@@ -1,9 +1,9 @@
 [Unit]
-Description=Music Info Notifier
+Description=Music Info Notifier (Flatpak)
 After=graphical-session.target
 
 [Service]
-ExecStart=%h/.cargo/bin/music_info
+ExecStart=/usr/bin/flatpak run com.github.rrebeiz.music_info
 Restart=on-failure
 RestartSec=3
 
