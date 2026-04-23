@@ -68,3 +68,32 @@ uninstall-flatpak:
 	flatpak uninstall -y --noninteractive $(APP_ID) || true
 
 	@echo "flatpak uninstalled!"
+
+## install-bin: downloads the prebuilt binary and installs it
+install-bin:
+	@echo "downloading prebuilt binary..."
+	curl -L https://github.com/rrebeiz/music_info/releases/latest/download/music_info -o music_info
+
+	chmod +x music_info
+	sudo install -Dm755 music_info /usr/local/bin/music_info
+	rm music_info
+
+	mkdir -p $(HOME)/.config/systemd/user
+	cp music-info.service $(SERVICE_PATH)
+
+	systemctl --user daemon-reload
+	systemctl --user enable --now music_info
+
+## uninstall-bin: removes the binary and service file
+uninstall-bin:
+	@echo "stopping service..."
+	systemctl --user disable --now music_info || true
+
+	@echo "removing service file..."
+	rm -f $(SERVICE_PATH)
+	systemctl --user daemon-reload
+
+	@echo "removing binary (requires sudo)..."
+	sudo rm -f /usr/local/bin/music_info
+
+	@echo "uninstall complete!"

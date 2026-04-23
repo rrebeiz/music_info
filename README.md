@@ -50,12 +50,14 @@ System-level dependencies (Linux):
 ```bash
 make install          # native
 make install-flatpak  # flatpak version
+make install-bin      # download and install release binary
 ```
 
 ### uninstalling
 ```bash
-make uninstall         #native
-make uninstall-flatpak # flatpak version
+make uninstall          # native
+make uninstall-flatpak  # flatpak version
+make uninstall-bin      # uninstall release binary
 ```
 
 ### Run in development mode
