@@ -6,11 +6,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let info = get_metadata();
         match info {
-            Ok(info) => {
+            Ok(Some(info)) => {
                 if last_song.as_deref() != Some(&info.playing) {
                     notify(&info)?;
                     last_song = Some(info.playing);
                 }
+            }
+            Ok(None) => {
+                last_song = None;
             }
 
             Err(_) => {

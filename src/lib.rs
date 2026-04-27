@@ -20,14 +20,21 @@ fn get_player() -> Result<Player, Box<dyn std::error::Error>> {
     Ok(player)
 }
 
-pub fn get_metadata() -> Result<MusicInfo, Box<dyn std::error::Error>> {
-    let player = get_player()?;
+pub fn get_metadata() -> Result<Option<MusicInfo>, Box<dyn std::error::Error>> {
+    let player = match get_player() {
+        Ok(p) => p,
+        Err(_) => return Ok(None),
+    };
     let metadata = player.get_metadata()?;
-    let title = metadata.title().unwrap_or("Unknown Title").to_string();
-    let artists = metadata
-        .artists()
-        .map(|a| a.join(", "))
-        .unwrap_or_else(|| "Unknown Artist".to_string());
+
+    let title = match metadata.title() {
+        Some(t) if !t.trim().is_empty() => t.to_string(),
+        _ => return Ok(None),
+    };
+    let artists = match metadata.artists() {
+        Some(a) if !a.is_empty() => a.join(", "),
+        _ => return Ok(None),
+    };
 
     let icon = metadata.art_url().unwrap_or("audio-x-generic").to_string();
     let image_path = if icon.contains("https://") {
@@ -49,7 +56,7 @@ pub fn get_metadata() -> Result<MusicInfo, Box<dyn std::error::Error>> {
         playing: song_info,
         image_path,
     };
-    Ok(music_info)
+    Ok(Some(music_info))
 }
 
 // TODO: maybe hash the images instead
