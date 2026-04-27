@@ -1,24 +1,23 @@
-use mpris::PlayerFinder;
 use mpris::Player;
+use mpris::PlayerFinder;
 use notify_rust::Notification;
+use std::path::Path;
 
-
-
-// const IMAGE_DOWNLOAD_PATH: &str = "/tmp/image.jpeg";
-
+const IMAGE_PATH: &str = "/tmp/";
 
 #[derive(Debug)]
 pub struct MusicInfo {
     title: String,
     artist: String,
     icon: String,
-   pub playing: String
+    image_path: Option<String>,
+    pub playing: String,
 }
 
 fn get_player() -> Result<Player, Box<dyn std::error::Error>> {
     let player = PlayerFinder::new()?.find_active()?;
 
-  Ok(player)
+    Ok(player)
 }
 
 pub fn get_metadata() -> Result<MusicInfo, Box<dyn std::error::Error>> {
@@ -26,41 +25,75 @@ pub fn get_metadata() -> Result<MusicInfo, Box<dyn std::error::Error>> {
     let metadata = player.get_metadata()?;
     let title = metadata.title().unwrap_or("Unknown Title").to_string();
     let artists = metadata
-    .artists()
-    .map(|a|a.join(", "))
-    .unwrap_or_else(|| "Unknown Artist".to_string());
+        .artists()
+        .map(|a| a.join(", "))
+        .unwrap_or_else(|| "Unknown Artist".to_string());
 
-    // images aren't currently supported, maybe when the panel gets better support
-    // let icon = metadata.art_url().unwrap_or("audio-x-generic").to_string();
-    // if icon.contains("https://") {
-    //     download_image(&icon,&IMAGE_DOWNLOAD_PATH )?;
-    // }
+    let icon = metadata.art_url().unwrap_or("audio-x-generic").to_string();
+    let image_path = if icon.contains("https://") {
+        Some(download_image(
+            &icon,
+            &IMAGE_PATH,
+            &title,
+            artists.as_str(),
+        )?)
+    } else {
+        None
+    };
 
     let song_info = format!("{} by {}", title, artists);
-    let music_info = MusicInfo{
+    let music_info = MusicInfo {
         title,
         artist: artists,
-        icon: "audio-x-generic".to_string(),
-        playing: song_info
+        icon: icon,
+        playing: song_info,
+        image_path,
     };
     Ok(music_info)
 }
 
-// fn download_image(url: &str, path: &str) -> Result<(), Box<dyn std::error::Error>> {
-//     let mut resp = reqwest::blocking::get(url)?;
-//     let mut out = File::create(path)?;
-//     copy(&mut resp, &mut out)?;
-//     Ok(())
-// }
+// TODO: maybe hash the images instead
+fn download_image(
+    url: &str,
+    path: &str,
+    title: &str,
+    artist: &str,
+) -> Result<String, Box<dyn std::error::Error>> {
+    let file_name = format!("{}{}-{}.jpeg", path, sanitize(title), sanitize(artist));
 
-pub fn notify(info: &MusicInfo) -> Result<(), Box<dyn std::error::Error>> {
-    Notification::new()
-    .summary("Now Playing: ")
-    .icon(&info.icon)
-    // .image_path(&info.icon)
-    .body(info.playing.as_str())
-    .show()?;
-    Ok(())
+    if Path::new(&file_name).exists() {
+        return Ok(file_name);
+    }
 
+    let bytes = reqwest::blocking::get(url)?.bytes()?;
+    std::fs::write(&file_name, &bytes)?;
+
+    Ok(file_name)
 }
 
+pub fn notify(info: &MusicInfo) -> Result<(), Box<dyn std::error::Error>> {
+    let image_uri = info
+        .image_path
+        .as_ref()
+        .map(|p| format!("file://{}", p))
+        .unwrap_or_else(|| "audio-x-generic".to_string());
+
+    Notification::new()
+        .summary("Now Playing:")
+        .icon("audio-x-generic")
+        .image_path(&image_uri)
+        .body(&info.playing)
+        .show()?;
+
+    Ok(())
+}
+
+fn sanitize(input: &str) -> String {
+    input
+        .trim()
+        .to_lowercase()
+        .replace('/', "_")
+        .replace('\\', "_")
+        .replace(':', "_")
+        .replace(' ', "_")
+}
