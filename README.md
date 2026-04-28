@@ -24,11 +24,11 @@ It monitors the active media player through the MPRIS D-Bus interface and displa
 * Sends desktop notifications on track change
 * Super lightweight CLI-based design (consumes less than half a megabyte)
 * Works with common Linux media players (Spotify, VLC, browser media sessions, etc.)
+* Can download album art based on taste (configuration file) on by default
 
 ---
 ## Requirements
-* Pop!_OS with Cosmic (Or another distro running COSMIC)
-* This should generally work on any Linux distribution, however it was made with Cosmic in mind as it doesn't currently have any media notifications.
+* * A Linux distribution running a notification daemon (tested on Pop!_OS with COSMIC)
 ---
 
 ## Dependencies
@@ -43,6 +43,13 @@ System-level dependencies (Linux):
 ---
 
 ## Usage
+If you would like to disable the album art feature, then go ahead and create a folder inside ./config and create a file called config.toml with the following content:
+album_art = false
+This will disable the album art feature in Music Info.
+```bash
+mkdir -p ~/.config/music_info && echo "album_art = false" > ~/.config/music_info/config.toml
+```
+
 
 ### Installing
 
@@ -83,7 +90,7 @@ cargo build --release
 ```bash
 cargo install --path .
 
-mkdir -p ~./config/systemd/user
+mkdir -p ~/.config/systemd/user
 cp music_info.service ~/.config/systemd/user/
 systemctl --user daemon-reload
 systemctl --user enable music_info
@@ -115,4 +122,3 @@ repeat the steps for creating a service entry, but change the path to the binary
 
 Planned or possible enhancements:
 * System tray integration
-* Album art support (when supported by notification daemon)

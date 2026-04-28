@@ -2,6 +2,7 @@ use mpris::Player;
 use mpris::PlayerFinder;
 use notify_rust::Notification;
 use std::path::Path;
+pub mod utils;
 
 const IMAGE_PATH: &str = "/tmp/";
 
@@ -20,7 +21,9 @@ fn get_player() -> Result<Player, Box<dyn std::error::Error>> {
     Ok(player)
 }
 
-pub fn get_metadata() -> Result<Option<MusicInfo>, Box<dyn std::error::Error>> {
+pub fn get_metadata(
+    config: &utils::Config,
+) -> Result<Option<MusicInfo>, Box<dyn std::error::Error>> {
     let player = match get_player() {
         Ok(p) => p,
         Err(_) => return Ok(None),
@@ -37,7 +40,8 @@ pub fn get_metadata() -> Result<Option<MusicInfo>, Box<dyn std::error::Error>> {
     };
 
     let icon = metadata.art_url().unwrap_or("audio-x-generic").to_string();
-    let image_path = if icon.contains("https://") {
+
+    let image_path = if config.album_art && icon.contains("https://") {
         Some(download_image(
             &icon,
             &IMAGE_PATH,
@@ -71,9 +75,10 @@ fn download_image(
     if Path::new(&file_name).exists() {
         return Ok(file_name);
     }
-
-    let bytes = reqwest::blocking::get(url)?.bytes()?;
-    std::fs::write(&file_name, &bytes)?;
+    let mut response = ureq::get(url).call()?;
+    let mut reader = response.body_mut().as_reader();
+    let mut file = std::fs::File::create(&file_name)?;
+    std::io::copy(&mut reader, &mut file)?;
 
     Ok(file_name)
 }
