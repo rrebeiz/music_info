@@ -28,6 +28,7 @@ It monitors the active media player through the MPRIS D-Bus interface and displa
 
 ---
 ## Requirements
+* * A Linux distribution running a notification daemon (tested on Omarchy)
 * * A Linux distribution running a notification daemon (tested on Pop!_OS with COSMIC)
 ---
 
