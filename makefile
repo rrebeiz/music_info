@@ -1,5 +1,5 @@
 APP_ID=com.github.rrebeiz.music_info
-SERVICE_PATH=$(HOME)/.config/systemd/user/music_info.service
+SERVICE_PATH=$(HOME)/.config/systemd/user/music-info.service
 
 ## build: builds the app
 build:
@@ -22,7 +22,7 @@ install:
 
 	cp music-info.service $(SERVICE_PATH)
 	systemctl --user daemon-reload
-	systemctl --user enable --now music_info
+	systemctl --user enable --now music-info
 	@echo "installed and started!"
 
 ## install-flatpak: installs flatpak + systemd service
@@ -35,14 +35,14 @@ install-flatpak:
 
 	cp ./flatpak/music-info-flatpak.service $(SERVICE_PATH)
 	systemctl --user daemon-reload
-	systemctl --user enable --now music_info
+	systemctl --user enable --now music-info
 
 	@echo "flatpak installed and started!"
 
 ## uninstall: uninstalls the service and binary
 uninstall:
 	@echo "stopping service..."
-	systemctl --user disable --now music_info || true
+	systemctl --user disable --now music-info || true
 
 	@echo "removing service file..."
 	rm -f $(SERVICE_PATH)
@@ -57,7 +57,7 @@ uninstall:
 ## uninstall-flatpak: uninstalls flatpak + systemd service
 uninstall-flatpak:
 	@echo "stopping service..."
-	systemctl --user disable --now music_info || true
+	systemctl --user disable --now music-info || true
 
 	@echo "removing service file..."
 	rm -f $(SERVICE_PATH)
@@ -72,28 +72,28 @@ uninstall-flatpak:
 ## install-bin: downloads the prebuilt binary and installs it
 install-bin:
 	@echo "downloading prebuilt binary..."
-	curl -L https://github.com/rrebeiz/music_info/releases/latest/download/music_info -o music_info
+	curl -L https://github.com/rrebeiz/music_info/releases/latest/download/music-info -o music-info
 
-	chmod +x music_info
-	sudo install -Dm755 music_info /usr/local/bin/music_info
-	rm music_info
+	chmod +x music-info
+	sudo install -Dm755 music-info /usr/local/bin/music-info
+	rm music-info
 
 	mkdir -p $(HOME)/.config/systemd/user
 	cp music-info.service $(SERVICE_PATH)
 
 	systemctl --user daemon-reload
-	systemctl --user enable --now music_info
+	systemctl --user enable --now music-info
 
 ## uninstall-bin: removes the binary and service file
 uninstall-bin:
 	@echo "stopping service..."
-	systemctl --user disable --now music_info || true
+	systemctl --user disable --now music-info || true
 
 	@echo "removing service file..."
 	rm -f $(SERVICE_PATH)
 	systemctl --user daemon-reload
 
 	@echo "removing binary (requires sudo)..."
-	sudo rm -f /usr/local/bin/music_info
+	sudo rm -f /usr/local/bin/music-info
 
 	@echo "uninstall complete!"

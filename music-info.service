@@ -3,7 +3,7 @@ Description=Music Info Notifier
 After=graphical-session.target
 
 [Service]
-ExecStart=%h/.cargo/bin/music_info
+ExecStart=%h/.cargo/bin/music-info
 Restart=on-failure
 RestartSec=3
 

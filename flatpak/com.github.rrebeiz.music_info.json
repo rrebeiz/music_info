@@ -1,12 +1,12 @@
 {
     "app-id": "com.github.rrebeiz.music_info",
     "runtime": "org.freedesktop.Platform",
-    "runtime-version": "24.08",
+    "runtime-version": "25.08",
     "sdk": "org.freedesktop.Sdk",
     "sdk-extensions": [
         "org.freedesktop.Sdk.Extension.rust-stable"
     ],
-    "command": "music_info",
+    "command": "music-info",
     "build-options": {
         "append-path": "/usr/lib/sdk/rust-stable/bin",
         "env": {
