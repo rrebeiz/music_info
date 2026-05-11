@@ -79,7 +79,7 @@ install-bin:
 	rm music-info
 
 	mkdir -p $(HOME)/.config/systemd/user
-	cp music-info.service $(SERVICE_PATH)
+	cp music-info-bin.service $(SERVICE_PATH)
 
 	systemctl --user daemon-reload
 	systemctl --user enable --now music-info
